@@ -270,17 +270,15 @@ public class FormCadConsulta extends javax.swing.JFrame {
                 return;
             }
 
-
-            String statusInicial = "Agendada"; 
-            String diagnosticoInicial = ""; 
-            String tratamentoInicial = "";
-
- 
-            Consulta novaConsulta = new Consulta(statusInicial, diagnosticoInicial, tratamentoInicial, dataHoraConsulta, pacienteEncontrado); 
+            Consulta novaConsulta = new Consulta( dataHoraConsulta, pacienteEncontrado); 
             
             consultaDAO.inserir(novaConsulta);
             JOptionPane.showMessageDialog(this, "Consulta agendada com sucesso! ID: " + novaConsulta.getId(), "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             limparCamposConsulta(); 
+            
+            FormRelatorioConsulta relatorio = FormRelatorioConsulta.geraFormRelatorioConsulta();
+            relatorio.carregarConsultas();
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao agendar consulta: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();

@@ -4,11 +4,29 @@
  */
 package com.mycompany.petplus;
 
+import java.util.List;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+
+
+
 /**
  *
  * @author yasmi
  */
 public class FormVerConsultasCliente extends javax.swing.JFrame {
+    private static FormVerConsultasCliente cadConsultasClienteUnic;
+
+    private final ConsultaService consultaService = new ConsultaService();
+
+   
+    public static FormVerConsultasCliente geraFormVerConsultasCliente(){
+        if(cadConsultasClienteUnic == null){
+            cadConsultasClienteUnic = new FormVerConsultasCliente();
+        }
+        return cadConsultasClienteUnic;
+    }
 
     /**
      * Creates new form FormVerConsultasCliente
@@ -43,8 +61,6 @@ public class FormVerConsultasCliente extends javax.swing.JFrame {
 
         jLabel3.setText("Por favor digite seu CPF:");
 
-        jTextField2.setText("jTextField2");
-
         jButton1.setText("Ver consulta");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -53,6 +69,11 @@ public class FormVerConsultasCliente extends javax.swing.JFrame {
         });
 
         jButton2.setText("Voltar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -75,7 +96,7 @@ public class FormVerConsultasCliente extends javax.swing.JFrame {
                         .addComponent(jButton1)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -101,8 +122,70 @@ public class FormVerConsultasCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        buscarConsultasPorCPF();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        sair();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    public void sair(){
+        int ret = JOptionPane.showConfirmDialog(
+                null,
+                "Deseja realmente voltar ao menu do cliente?",
+                "Saida",
+                JOptionPane.YES_NO_CANCEL_OPTION
+        );
+        if(ret == 0){
+            dispose();
+        }
+    }
+    private void buscarConsultasPorCPF() {
+    String cpfStr = jTextField2.getText().trim();
+
+    if (cpfStr.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Por favor, informe o CPF.");
+        return;
+    }
+
+    // Remove qualquer caractere não numérico (pontos, traços, espaços)
+    cpfStr = cpfStr.replaceAll("\\D", "");
+
+    try {
+        // Passe o CPF como String, sem converter para long
+        List<Consulta> consultas = consultaService.buscarPorCPFProprietario(cpfStr);
+
+        if (consultas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Nenhuma consulta encontrada para esse CPF.");
+        } else {
+            mostrarConsultasNoPainel(consultas);
+        }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Erro ao buscar consultas: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+private void mostrarConsultasNoPainel(List<Consulta> consultas) {
+    StringBuilder sb = new StringBuilder();
+    
+    for (Consulta c : consultas) {
+        sb.append("Paciente: ").append(c.getPaciente().getNome()).append("\n");
+        
+        // Quebrando data e hora
+        sb.append("Data: ").append(c.getDataHora().toLocalDate().toString()).append("\n");
+        sb.append("Hora: ").append(c.getDataHora().toLocalTime().toString()).append("\n");
+        
+        sb.append("\n"); // linha em branco para separar consultas
+    }
+    
+    JTextArea textArea = new JTextArea(sb.toString());
+    textArea.setEditable(false);
+    textArea.setOpaque(false);
+    textArea.setFont(new JLabel().getFont()); // usa a fonte padrão do JLabel
+    
+    JOptionPane.showMessageDialog(this, textArea, "Consultas Encontradas", JOptionPane.INFORMATION_MESSAGE);
+}
 
     /**
      * @param args the command line arguments

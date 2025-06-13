@@ -4,12 +4,12 @@
  */
 package com.mycompany.petplus;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author yasmi
@@ -34,6 +34,7 @@ public class FormRelatorioPacientes extends javax.swing.JFrame {
         carregarPacientes();
     }
 
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,14 +44,19 @@ public class FormRelatorioPacientes extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTablePaciente = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTablePacientes = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTablePaciente.setModel(new javax.swing.table.DefaultTableModel(
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel1.setText("Pacientes");
+
+        jTablePacientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -58,13 +64,10 @@ public class FormRelatorioPacientes extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "Nome", "Raça", "Dono", "CPF do dono"
+                "Paciente", "Raça", "Dono", "CPF do Dono"
             }
         ));
-        jScrollPane1.setViewportView(jTablePaciente);
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel1.setText("Pacientes");
+        jScrollPane1.setViewportView(jTablePacientes);
 
         jButton1.setText("Voltar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -73,43 +76,73 @@ public class FormRelatorioPacientes extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Excluir paciente");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Buscar paciente");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(38, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(183, 183, 183))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(35, 35, 35))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(225, 225, 225)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addGap(18, 18, 18)
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jButton1))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(13, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(14, 14, 14)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 256, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addGap(11, 11, 11))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 335, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        deletarPacienteSelecionado();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        buscarPacientePorNome();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         sair();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     public void preencherTabela(List<Paciente> paciente) {
-        DefaultTableModel model = (DefaultTableModel) jTablePaciente.getModel();
+        DefaultTableModel model = (DefaultTableModel) jTablePacientes.getModel();
         model.setRowCount(0);
 
         for (Paciente pac : paciente) {
@@ -155,6 +188,63 @@ public class FormRelatorioPacientes extends javax.swing.JFrame {
             dispose();
         }
     }
+    
+    public void buscarPacientePorNome() {
+    String nome = JOptionPane.showInputDialog(this, "Digite o nome do medicamento para buscar:");
+
+    if (nome != null && !nome.trim().isEmpty()) {
+        try {
+            List<Paciente> todos = pacienteService.buscarTodos();
+            List<Paciente> filtrados = new ArrayList<>();
+
+            for (Paciente pac : todos) {
+                if (pac.getNome().toLowerCase().contains(nome.toLowerCase())) {
+                    filtrados.add(pac);
+                }
+            }
+
+            if (filtrados.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nenhum paciente encontrado com esse nome.");
+            }
+
+            preencherTabela(filtrados);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar paciente: " + ex.getMessage());
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Nenhum nome informado para busca.");
+    }
+}
+
+    
+    public void deletarPacienteSelecionado() {
+    int linhaSelecionada = jTablePacientes.getSelectedRow();
+
+    if (linhaSelecionada >= 0) {
+  
+        String nomePaciente = jTablePacientes.getValueAt(linhaSelecionada, 0).toString();
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Deseja realmente excluir o paciente: " + nomePaciente + "?",
+            "Confirmação",
+            JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                pacienteService.deletarPorNomePaciente(nomePaciente);
+                JOptionPane.showMessageDialog(this, "Paciente excluído com sucesso!");
+                carregarPacientes(); // Atualiza tabela
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir paciente: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Selecione um paciente na tabela para excluir.");
+    }
+}
+
+
     /**
      * @param args the command line arguments
      */
@@ -192,8 +282,10 @@ public class FormRelatorioPacientes extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTablePaciente;
+    private javax.swing.JTable jTablePacientes;
     // End of variables declaration//GEN-END:variables
 }

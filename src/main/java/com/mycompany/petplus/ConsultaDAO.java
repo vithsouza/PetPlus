@@ -4,24 +4,17 @@
  */
 package com.mycompany.petplus;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ConsultaDAO {
 
     Consulta inserir(Consulta consulta) throws Exception; 
     
-    Consulta buscarPorId(long id) throws Exception; 
-    
     List<Consulta> buscarTodos() throws Exception;
     
-    List<Consulta> buscarPorPaciente(Paciente paciente) throws Exception;
-
-    List<Consulta> buscarPorProprietarioCPF(long cpfProprietario) throws Exception;
-    
-    List<Consulta> buscarPorPeriodo(LocalDateTime inicio, LocalDateTime fim) throws Exception;
-
     void atualizar(Consulta consulta) throws Exception;
     
-    void deletar(long id) throws Exception;
+    void deletar(String nomePaciente) throws Exception;
+    
+    List<Consulta> buscarPorCPFProprietario(String cpf) throws Exception;
 }

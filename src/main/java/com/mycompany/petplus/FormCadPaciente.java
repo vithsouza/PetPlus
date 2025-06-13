@@ -329,6 +329,8 @@ public class FormCadPaciente extends javax.swing.JFrame {
             if (resposta == JOptionPane.YES_OPTION) {
                 limparCamposPaciente(); 
             } else { 
+                FormRelatorioPacientes relatorio = FormRelatorioPacientes.geraFormRelatorioPacientes();
+                relatorio.carregarPacientes();
                 this.dispose(); 
             }
 

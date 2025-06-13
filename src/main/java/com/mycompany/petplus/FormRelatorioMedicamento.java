@@ -9,6 +9,13 @@ import javax.swing.JOptionPane;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import Conexao.Conexao;
+
+
 
 /**
  *
@@ -47,6 +54,8 @@ public class FormRelatorioMedicamento extends javax.swing.JFrame {
         jTableMedicamentos = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,6 +82,20 @@ public class FormRelatorioMedicamento extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Buscar medicamento");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Deletar medicamento");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -84,12 +107,15 @@ public class FormRelatorioMedicamento extends javax.swing.JFrame {
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(30, 30, 30)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(35, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(22, 22, 22))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton1))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -98,8 +124,11 @@ public class FormRelatorioMedicamento extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 17, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addGap(17, 17, 17))
         );
 
@@ -109,6 +138,14 @@ public class FormRelatorioMedicamento extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         sair();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        deletarMedicamentoSelecionado();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        buscarMedicamentoPorNome();
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     public void preencherTabela(List<Medicamento> medicamentos) {
         DefaultTableModel model = (DefaultTableModel) jTableMedicamentos.getModel();
@@ -141,6 +178,58 @@ public class FormRelatorioMedicamento extends javax.swing.JFrame {
             dispose();
         }
     }
+    
+    public void buscarMedicamentoPorNome() {
+    String nome = JOptionPane.showInputDialog(this, "Digite o nome do medicamento para buscar:");
+
+    if (nome != null && !nome.trim().isEmpty()) {
+        try {
+            List<Medicamento> todos = medicamentoService.buscarTodos();
+            List<Medicamento> filtrados = new ArrayList<>();
+
+            for (Medicamento med : todos) {
+                if (med.getNome().toLowerCase().contains(nome.toLowerCase())) {
+                    filtrados.add(med);
+                }
+            }
+
+            if (filtrados.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Nenhum medicamento encontrado com esse nome.");
+            }
+
+            preencherTabela(filtrados);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar medicamento: " + ex.getMessage());
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Nenhum nome informado para busca.");
+    }
+}
+
+    
+    public void deletarMedicamentoSelecionado() {
+    int linhaSelecionada = jTableMedicamentos.getSelectedRow();
+
+    if (linhaSelecionada >= 0) {
+        String nome = jTableMedicamentos.getValueAt(linhaSelecionada, 0).toString();
+
+        int confirm = JOptionPane.showConfirmDialog(this, "Deseja realmente excluir o medicamento: " + nome + "?", "Confirmação", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            try {
+                medicamentoService.deletarPorNome(nome);
+                JOptionPane.showMessageDialog(this, "Medicamento excluído com sucesso!");
+                carregarMedicamentos();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, "Erro ao excluir medicamento: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    } else {
+        JOptionPane.showMessageDialog(this, "Selecione um medicamento na tabela para excluir.");
+    }
+}
+
+
     /**
      * @param args the command line arguments
      */
@@ -178,6 +267,8 @@ public class FormRelatorioMedicamento extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableMedicamentos;

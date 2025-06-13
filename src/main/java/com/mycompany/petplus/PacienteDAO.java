@@ -18,6 +18,6 @@ public interface PacienteDAO {
     
     void atualizar(Paciente paciente) throws Exception;
     
-    void deletar(long id) throws Exception;
-    
+
+    void deletarPorNomePaciente(String nomePaciente) throws Exception;
 }

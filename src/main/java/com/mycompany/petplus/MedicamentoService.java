@@ -74,4 +74,31 @@ public class MedicamentoService implements MedicamentoDAO {
         }
         return medicamentos;
     }
+    
+    
+    public void deletarPorNome(String nome) throws Exception {
+    Connection conexao = null;
+    PreparedStatement pstmt = null;
+
+    try {
+        conexao = Conexao.conectar();
+        String sql = "DELETE FROM medicamentos WHERE nome = ?";
+        pstmt = conexao.prepareStatement(sql);
+        pstmt.setString(1, nome);
+        int linhasAfetadas = pstmt.executeUpdate();
+
+        if (linhasAfetadas == 0) {
+            throw new Exception("Nenhum medicamento encontrado com esse nome.");
+        }
+    } catch (SQLException e) {
+        throw new Exception("Erro ao excluir medicamento: " + e.getMessage(), e);
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+        } catch (SQLException e) {
+            System.err.println("Erro ao fechar PreparedStatement: " + e.getMessage());
+        }
+        Conexao.fecharConexao(conexao);
+    }
+}
 }

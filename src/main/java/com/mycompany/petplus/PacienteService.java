@@ -251,34 +251,35 @@ public class PacienteService implements PacienteDAO {
         }
     }
 
-    @Override
-    public void deletar(long id) throws Exception {
-        Connection conexao = null;
-        PreparedStatement pstmt = null;
-        try {
-            conexao = Conexao.conectar();
-            if (conexao == null) {
-                throw new Exception("Falha ao conectar ao banco de dados.");
-            }
-
-            String sql = "DELETE FROM pacientes WHERE id = ?";
-            pstmt = conexao.prepareStatement(sql);
-            pstmt.setLong(1, id);
-            
-            int rowsAffected = pstmt.executeUpdate();
-            if (rowsAffected == 0) {
-                throw new Exception("Paciente com ID " + id + " não encontrado para exclusão.");
-            }
-
-        } catch (SQLException e) {
-            throw new Exception("Erro ao deletar paciente do banco de dados: " + e.getMessage(), e);
-        } finally {
-            try {
-                if (pstmt != null) pstmt.close();
-            } catch (SQLException e) {
-                System.err.println("Erro ao fechar PreparedStatement: " + e.getMessage());
-            }
-            Conexao.fecharConexao(conexao);
+@Override
+public void deletarPorNomePaciente(String nomePaciente) throws Exception {
+    Connection conexao = null;
+    PreparedStatement pstmt = null;
+    try {
+        conexao = Conexao.conectar();
+        if (conexao == null) {
+            throw new Exception("Falha ao conectar ao banco de dados.");
         }
+
+        String sql = "DELETE FROM pacientes WHERE nome = ?";
+        pstmt = conexao.prepareStatement(sql);
+        pstmt.setString(1, nomePaciente);
+
+        int rowsAffected = pstmt.executeUpdate();
+        if (rowsAffected == 0) {
+            throw new Exception("Nenhum paciente encontrado com o nome: " + nomePaciente);
+        }
+
+    } catch (SQLException e) {
+        throw new Exception("Erro ao deletar paciente: " + e.getMessage(), e);
+    } finally {
+        try {
+            if (pstmt != null) pstmt.close();
+        } catch (SQLException e) {
+            System.err.println("Erro ao fechar PreparedStatement: " + e.getMessage());
+        }
+        Conexao.fecharConexao(conexao);
     }
+}
+
 }

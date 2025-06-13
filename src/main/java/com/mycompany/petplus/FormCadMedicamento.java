@@ -213,6 +213,9 @@ public class FormCadMedicamento extends javax.swing.JFrame {
             medicamentoDAO.inserir(novoMedicamento); 
             JOptionPane.showMessageDialog(this, "Medicamento cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
             limparCampos(); 
+            
+            FormRelatorioMedicamento relatorio = FormRelatorioMedicamento.geraFormRelatorioMedicamento();
+            relatorio.carregarMedicamentos();
         } catch (Exception e) { 
             JOptionPane.showMessageDialog(this, "Erro ao cadastrar medicamento: " + e.getMessage(), "Erro de Cadastro", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();

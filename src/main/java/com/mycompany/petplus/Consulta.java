@@ -12,26 +12,18 @@ import java.time.LocalDateTime;
  */
 public class Consulta {
     private long id;
-    private String status; 
-    private String diagnostico;
-    private String tratamento;
+
     private LocalDateTime dataHora; 
     private Paciente paciente; 
 
-    public Consulta(String status, String diagnostico, String tratamento, LocalDateTime dataHora, Paciente paciente) {
-        this.status = status;
-        this.diagnostico = diagnostico;
-        this.tratamento = tratamento;
+    public Consulta( LocalDateTime dataHora, Paciente paciente) {
         this.dataHora = dataHora;
         this.paciente = paciente;
     }
 
   
-    public Consulta(long id, String status, String diagnostico, String tratamento, LocalDateTime dataHora, Paciente paciente) {
+    public Consulta(long id, LocalDateTime dataHora, Paciente paciente) {
         this.id = id;
-        this.status = status;
-        this.diagnostico = diagnostico;
-        this.tratamento = tratamento;
         this.dataHora = dataHora;
         this.paciente = paciente;
     }
@@ -42,30 +34,6 @@ public class Consulta {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDiagnostico() {
-        return diagnostico;
-    }
-
-    public void setDiagnostico(String diagnostico) {
-        this.diagnostico = diagnostico;
-    }
-
-    public String getTratamento() {
-        return tratamento;
-    }
-
-    public void setTratamento(String tratamento) {
-        this.tratamento = tratamento;
     }
 
     public LocalDateTime getDataHora() {
